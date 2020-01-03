@@ -1,3 +1,5 @@
+import pickle
+
 class tree:
 
     def __init__(self, letter, alphabet = None):
@@ -70,6 +72,16 @@ class lexicon:
                     self.trees_[l] = tree(l, alphabet = self.alphabet)
                 self.trees_[l].from_words(w)
 
+    def save(self, filename):
+        with open(filename, 'wb') as fhandle:
+            pickle.dump((self.alphabet, self.trees_), fhandle)
+
+
+    def load(self, filename):
+        with open(filename, 'rb') as fhandle:
+            self.alphabet, self.trees_ = pickle.load(fhandle)
+
+            
     def display(self):
         for i, t in self.trees_.items():
             print("{}: ".format(i), end = "")
