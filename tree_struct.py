@@ -15,23 +15,25 @@ class tree:
             sofar = []
         words1 = [i[1:] for i in words]
         if len(words1[0]) == 0:
-            self.finished_word = sofar + [self.letter]
+            if self.finished_word == None:
+                self.finished_word = sofar + [self.letter]
             words1 = words1[1:]
+        if len(words1) == 0:
+            return None
         subwords = dict([(i,[]) for i in self.alphabet])
         for i in words1:
             subwords[i[0]].append(i)
         for l, w in subwords.items():
             if len(w) > 0:
-                self.neighbors[l] = tree(l, alphabet = self.alphabet)
-                self.neighbors[l].from_words(w, sofar + [self.letter])
-            else:
-                self.neighbors[l] = None
+                if self.neighbors.get(l) == None:
+                    self.neighbors[l] = tree(l, alphabet = self.alphabet)
+                self.neighbors[l].from_words_rec_(w, sofar + [self.letter])
 
                 
     def from_words(self, words, sofar = None):
-        self.from_words_rec_(sorted(words, key = len), sofar)
+        self.from_words_rec_(sorted(set(words), key = len), sofar)
 
-
+        
     def display(self):
         self.display_()
         print()
@@ -46,3 +48,29 @@ class tree:
         print("]]", end = "")
 
 
+class lexicon:
+
+    def __init__(self, words = None, alphabet = None):
+        if alphabet == None:
+            self.alphabet = [chr(ord('A') + i) for i in range(26)]
+        else:
+            self.alphabet = alphabet
+        self.trees_ = dict()
+        self.add_words(words)
+
+    def add_words(self, words):
+        if words == None:
+            return None
+        subwords = dict([(i,[]) for i in self.alphabet])
+        for i in words:
+            subwords[i[0]].append(i)
+        for l, w in subwords.items():
+            if len(w) > 0:
+                if self.trees_.get(l) == None:
+                    self.trees_[l] = tree(l, alphabet = self.alphabet)
+                self.trees_[l].from_words(w)
+
+    def display(self):
+        for i, t in self.trees_.items():
+            print("{}: ".format(i), end = "")
+            t.display()
