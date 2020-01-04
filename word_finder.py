@@ -110,6 +110,7 @@ def run_board(board):
     for i in range(4):
         for j in range(4):
             DFS((i, j), [], lex.get_tree(board[i][j]), board)
+    return max_heap
 
 if __name__ == "__main__":
     run_board(board)
