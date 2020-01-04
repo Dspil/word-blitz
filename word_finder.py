@@ -38,15 +38,11 @@ class Comparator:
         return repr(self.val[0])
 
 #initialize and load lexicon
-lex = lexicon()
-lex.load("lexicon.wb")
-
-max_heap = MaxHeap()
 
 alphabet = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω']
 
 #board is given
-board = [['Ρ', 'Ι', 'Δ', 'Ε'], ['Τ', 'Ν', 'Ε', 'Σ'], ['Ι', 'Ι', 'Ε', 'Α'], ['Π', 'Σ', 'Π', 'Ν']]
+board = [['Ο', 'Ε', 'Ν', 'Σ'], ['Τ', 'Λ', 'Α', 'Ο'], ['Ω', 'Γ', 'Ξ', 'Ρ'], ['Μ', 'Σ', 'Ε', 'Κ']]
 
 values = {'Α' : 1, 'Β' : 8, 'Γ' : 4, 'Δ' : 4, 'Ε' : 1, 'Ζ' : 10, 'Η' : 2, 'Θ' : 10, 'Ι' : 1, 'Κ' : 2, 'Λ' : 3, 'Μ' : 3, 'Ν' : 1, 'Ξ' : 10, 'Ο' : 1, 'Π' : 2, 'Ρ' : 2, 'Σ' : 1, 'Τ' : 1, 'Υ' : 2, 'Φ' : 8, 'Χ' : 8, 'Ψ' : 10, 'Ω' : 3}
 #little change
@@ -96,7 +92,7 @@ def calc_points(l, board):
         sm += values[board[i[0]][i[1]]]
     return sm
 
-def DFS(coords, sofar, lex_tree, board):
+def DFS(coords, sofar, lex_tree, board, max_heap):
     sofar.append(coords)
     neighbors = find_neighbors(coords)
     if lex_tree.finished_word == True:
@@ -104,14 +100,18 @@ def DFS(coords, sofar, lex_tree, board):
     for n in neighbors:
         if n in sofar or board[n[0]][n[1]] not in lex_tree.neighbors.keys():
             continue
-        DFS(n, sofar.copy(), lex_tree.neighbors[board[n[0]][n[1]]], board)
+        DFS(n, sofar.copy(), lex_tree.neighbors[board[n[0]][n[1]]], board, max_heap)
 
 def run_board(board):
+    lex = lexicon()
+    lex.load("lexicon.wb")
+    max_heap = MaxHeap()
+
     for i in range(4):
         for j in range(4):
-            DFS((i, j), [], lex.get_tree(board[i][j]), board)
+            DFS((i, j), [], lex.get_tree(board[i][j]), board, max_heap)
     return max_heap
 
 if __name__ == "__main__":
-    run_board(board)
-    print(max_heap.heap[0])
+    heap = run_board(board)
+    print(heap.heap[0])
