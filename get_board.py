@@ -17,20 +17,20 @@ with mss.mss() as sct:
     monitor = sct.monitors[0]
     #img = np.array(sct.grab(monitor))
 
-"""
-Up: 351
-Down: 644
-Left: 324
-Right: 610
-"""
+
+top = 351
+bottom = 644
+left = 324
+right = 610
+
 
 def grab_word_blitz_image():
     felmonitor = dict(monitor)
-    mymouse.position = (324 - 30, 351 - 30)
-    felmonitor['left'] = 324
-    felmonitor['top'] = 351
-    felmonitor['width'] = 286
-    felmonitor['height'] = 293
+    mymouse.position = (left - 30, top - 30)
+    felmonitor['left'] = left
+    felmonitor['top'] = top
+    felmonitor['width'] = right - left
+    felmonitor['height'] = bottom - top
     with mss.mss() as sct:
         img = np.array(sct.grab(felmonitor))[:,:,1].astype(np.float32)
     #imshow(img, cmap = 'gray')
@@ -58,7 +58,7 @@ def trim(img):
     down = img.shape[0]
     while (img[down-1, :] == marker).mean() > 0.5:
         down -= 1
-    return img[up:down, left:right]
+    return (img[up:down, left:right], up, left)
 
 
 def get_letters(img):
@@ -142,15 +142,24 @@ def which_letter(img, dataset):
     return letter
 
 def get_board():
-    img = grab_word_blitz_image()
-    t = [[i.astype(np.float32) for i in j] for j in trim_letters(get_letters(trim((img > 0.5).astype(np.uint8))))]
+    img, newtop, newleft = trim((grab_word_blitz_image() > 0.5).astype(np.uint8))
+    newtop += top
+    newleft += left
+    t = [[i.astype(np.float32) for i in j] for j in trim_letters(get_letters(img))]
     data = load_dataset()
     board = []
     for i in t:
         board.append([])
         for j in i:
             board[-1].append(which_letter(j, data))
-    return board
+    rgap = 0.033 * img.shape[0]
+    cgap = 0.033 * img.shape[1]
+    rlen = img.shape[0] * 0.9 / 4
+    clen = img.shape[1] * 0.9 / 4
+    rpos = map(int, [rlen / 2, rlen * 3/2 + rgap, rlen * 5/2 + 2 * rgap, rlen * 7/2 + 3 * rgap])
+    cpos = map(int, [clen / 2, clen * 3/2 + cgap, clen * 5/2 + 2 * cgap, clen * 7/2 + 3 * cgap])
+    posboard = [[(j + newleft, i + newtop) for j in cpos] for i in rpos]
+    return board, posboard
 
 def pb():
     x = get_board()
