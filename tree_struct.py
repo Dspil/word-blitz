@@ -11,7 +11,7 @@ class tree:
             self.alphabet = alphabet
         self.neighbors = {}
 
-    
+
     def from_words_rec_(self, words, sofar = None):
         if sofar == None:
             sofar = []
@@ -31,16 +31,16 @@ class tree:
                     self.neighbors[l] = tree(l, alphabet = self.alphabet)
                 self.neighbors[l].from_words_rec_(w, sofar + [self.letter])
 
-                
+
     def from_words(self, words, sofar = None):
         self.from_words_rec_(sorted(set(words), key = len), sofar)
 
-        
+
     def display(self):
         self.display_()
         print()
 
-        
+
     def display_(self):
         print("[" + str(self.letter) + ", {}, [".format(self.finished_word), end = "")
         for i in self.neighbors.values():
@@ -60,6 +60,7 @@ class lexicon:
         self.trees_ = dict()
         self.add_words(words)
 
+
     def add_words(self, words):
         if words == None:
             return None
@@ -72,6 +73,7 @@ class lexicon:
                     self.trees_[l] = tree(l, alphabet = self.alphabet)
                 self.trees_[l].from_words(w)
 
+
     def save(self, filename):
         with open(filename, 'wb') as fhandle:
             pickle.dump((self.alphabet, self.trees_), fhandle)
@@ -81,7 +83,11 @@ class lexicon:
         with open(filename, 'rb') as fhandle:
             self.alphabet, self.trees_ = pickle.load(fhandle)
 
-            
+
+    def get_tree(self, char):
+        return self.trees_[char]
+        
+
     def display(self):
         for i, t in self.trees_.items():
             print("{}: ".format(i), end = "")
