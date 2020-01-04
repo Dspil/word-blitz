@@ -113,9 +113,4 @@ def run_board(board):
 
 if __name__ == "__main__":
     run_board(board)
-    while(True):
-        try:
-            x = max_heap.pop()
-            print(x)
-        except:
-            break
+    print(max_heap.heap[0])
