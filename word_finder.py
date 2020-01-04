@@ -9,3 +9,5 @@ lex.load("lexicon.wb")
 board = [['N', 'K', 'K', 'J', 'Q'], ['O', 'D', 'Q', 'G', 'E'], ['X', 'I', 'E', 'L', 'F'], ['U', 'T', 'S', 'Z', 'U'], ['W', 'U', 'L', 'J', 'Z']]
 
 lex.display()
+
+#little change
