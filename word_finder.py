@@ -42,7 +42,7 @@ class Comparator:
 alphabet = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω']
 
 #board is given
-board = [['Ο', 'Ε', 'Ν', 'Σ'], ['Τ', 'Λ', 'Α', 'Ο'], ['Ω', 'Γ', 'Ξ', 'Ρ'], ['Μ', 'Σ', 'Ε', 'Κ']]
+board = [['Γ', 'Λ', 'Ο', 'Σ'], ['Δ', 'Ε', 'Κ', 'Α'], ['Τ', 'Ι', 'Μ', 'Η'], ['Μ', 'Ε', 'Σ', 'Μ']]
 
 values = {'Α' : 1, 'Β' : 8, 'Γ' : 4, 'Δ' : 4, 'Ε' : 1, 'Ζ' : 10, 'Η' : 2, 'Θ' : 10, 'Ι' : 1, 'Κ' : 2, 'Λ' : 3, 'Μ' : 3, 'Ν' : 1, 'Ξ' : 10, 'Ο' : 1, 'Π' : 2, 'Ρ' : 2, 'Σ' : 1, 'Τ' : 1, 'Υ' : 2, 'Φ' : 8, 'Χ' : 8, 'Ψ' : 10, 'Ω' : 3}
 #little change
@@ -54,7 +54,7 @@ def add_coord(x):
 
 
 def sub_coord(x):
-    if x - 1 > 0:
+    if x - 1 > -1:
         return x - 1
     return None
 
@@ -112,6 +112,7 @@ def run_board(board):
             DFS((i, j), [], lex.get_tree(board[i][j]), board, max_heap)
     return max_heap
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    print("start")
     heap = run_board(board)
-    print(heap.heap[0])
+    print(heap.heap)

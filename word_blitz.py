@@ -24,6 +24,5 @@ def main():
                 continue
             break
         found.add(s)
-        print(s)
         move(word, posboard)
     
