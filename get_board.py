@@ -156,8 +156,8 @@ def get_board():
     cgap = 0.033 * img.shape[1]
     rlen = img.shape[0] * 0.9 / 4
     clen = img.shape[1] * 0.9 / 4
-    rpos = map(int, [rlen / 2, rlen * 3/2 + rgap, rlen * 5/2 + 2 * rgap, rlen * 7/2 + 3 * rgap])
-    cpos = map(int, [clen / 2, clen * 3/2 + cgap, clen * 5/2 + 2 * cgap, clen * 7/2 + 3 * cgap])
+    rpos = list(map(int, [rlen / 2, rlen * 3/2 + rgap, rlen * 5/2 + 2 * rgap, rlen * 7/2 + 3 * rgap]))
+    cpos = list(map(int, [clen / 2, clen * 3/2 + cgap, clen * 5/2 + 2 * cgap, clen * 7/2 + 3 * cgap]))
     posboard = [[(j + newleft, i + newtop) for j in cpos] for i in rpos]
     return board, posboard
 
