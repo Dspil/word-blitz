@@ -10,7 +10,6 @@ import sys
 #globals
 
 mymouse = mouse.Controller()
-mykeyboard = keyboard.Controller()
 
 #functions
 with mss.mss() as sct:
@@ -32,7 +31,7 @@ def grab_word_blitz_image():
     felmonitor['width'] = right - left
     felmonitor['height'] = bottom - top
     with mss.mss() as sct:
-        img = np.array(sct.grab(felmonitor))[:,:,1].astype(np.float32)
+        img = np.array(sct.grab(felmonitor))[:,:,:3].astype(np.float32)
     #imshow(img, cmap = 'gray')
     #plt.show()
     return img
@@ -58,7 +57,7 @@ def trim(img):
     down = img.shape[0]
     while (img[down-1, :] == marker).mean() > 0.5:
         down -= 1
-    return (img[up:down, left:right], up, left)
+    return (img[up:down, left:right], up, left, down, right)
 
 
 def get_letters(img):
@@ -141,17 +140,53 @@ def which_letter(img, dataset):
                 letter = i
     return letter
 
+def get_modifiers(colored, img):
+    """
+    2 words: [118, 53, 253]
+    3 words: [91, 198, 254]
+    2 letters: [214, 201, 126]
+    3 letters: [255, 146, 194]
+    """
+    mods = {(118, 53, 253) : (1, 2), (91, 198, 254) : (1, 3), (214, 201, 126) : (2, 1), (255, 146, 194) : (3, 1)}
+    start_cols = []
+    start_rows = []
+    left = 0
+    up = 0
+    marker = 0
+    for i in range(4):
+        while left < img.shape[1] and (img[:, left] == marker).mean() > 0.5:
+            left += 1
+        start_cols.append(left)
+        while left < img.shape[1] and (img[:, left] == marker).mean() < 0.5:
+            left += 1
+        while up < img.shape[0] and (img[up] == marker).mean() > 0.5:
+            up += 1
+        start_rows.append(up)
+        while up < img.shape[0] and (img[up] == marker).mean() < 0.5:
+            up += 1
+    modifiers = []
+    for i in start_rows:
+        modifiers.append([])
+        for j in start_cols:
+            modifiers[-1].append(mods.get(tuple(colored[i][j]), (1,1)))
+    return modifiers
+            
+
 def get_board():
-    img, newtop, newleft = trim((grab_word_blitz_image() > 0.5).astype(np.uint8))
+    bimg = grab_word_blitz_image().astype(np.uint8)
+    uncolored = np.dot(bimg, [0.2126, 0.7152, 0.0722]) / 255
+    img, newtop, newleft, newdown, newright = trim((uncolored > 0.5).astype(np.uint8))
+    colored = bimg[newtop:newdown, newleft: newright]
+    modifiers = get_modifiers(colored, img)
     newtop += top
     newleft += left
     t = [[i.astype(np.float32) for i in j] for j in trim_letters(get_letters(img))]
     data = load_dataset()
     board = []
-    for i in t:
+    for i in range(4):
         board.append([])
-        for j in i:
-            board[-1].append(which_letter(j, data))
+        for j in range(4):
+            board[-1].append((which_letter(t[i][j], data), modifiers[i][j][0], modifiers[i][j][1]))
     rgap = 0.033 * img.shape[0]
     cgap = 0.033 * img.shape[1]
     rlen = img.shape[0] * 0.9 / 4
