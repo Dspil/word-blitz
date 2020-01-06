@@ -102,7 +102,7 @@ def DFS(coords, sofar, lex_tree, board, max_heap):
     for n in neighbors:
         if n in sofar or board[n[0]][n[1]][0] not in lex_tree.neighbors.keys():
             continue
-        DFS(n, sofar.copy(), lex_tree.neighbors[board[n[0]][n[1]]], board, max_heap)
+        DFS(n, sofar.copy(), lex_tree.neighbors[board[n[0]][n[1]][0]], board, max_heap)
 
 def run_board(board):
     lex = lexicon()
