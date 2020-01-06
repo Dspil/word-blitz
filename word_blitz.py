@@ -8,7 +8,7 @@ import threading
 control = True
 
 def string_from_board(board, pos):
-    return "".join([board[i][j] for i,j in pos])
+    return "".join([board[i][j][0] for i,j in pos])
 
 def main_thread():
     global control
