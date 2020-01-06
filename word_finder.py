@@ -88,9 +88,11 @@ def find_neighbors(coords):
 
 def calc_points(l, board):
     sm = 0
+    acc = 1
     for i in l:
-        sm += values[board[i[0]][i[1]]]
-    return sm
+        acc *= board[i[0]][i[1]][2]
+        sm += values[board[i[0]][i[1]][0]] * board[i[0]][i[1]][1]
+    return sm * acc
 
 def DFS(coords, sofar, lex_tree, board, max_heap):
     sofar.append(coords)
@@ -98,7 +100,7 @@ def DFS(coords, sofar, lex_tree, board, max_heap):
     if lex_tree.finished_word == True:
         max_heap.push((sofar, calc_points(sofar, board)))
     for n in neighbors:
-        if n in sofar or board[n[0]][n[1]] not in lex_tree.neighbors.keys():
+        if n in sofar or board[n[0]][n[1]][0] not in lex_tree.neighbors.keys():
             continue
         DFS(n, sofar.copy(), lex_tree.neighbors[board[n[0]][n[1]]], board, max_heap)
 
@@ -109,7 +111,7 @@ def run_board(board):
 
     for i in range(4):
         for j in range(4):
-            DFS((i, j), [], lex.get_tree(board[i][j]), board, max_heap)
+            DFS((i, j), [], lex.get_tree(board[i][j][0]), board, max_heap)
     return max_heap
 
 if __name__ == '__main__':
