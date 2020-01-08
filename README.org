@@ -6,4 +6,5 @@ The lexicon was downloaded from the Aspell dictionaries at https://ftp.gnu.org/g
 The bot is now only usable from a 1366x768 screen using Mozilla Firefox.
 ** Authors
 Danai Efstathiou (danaiefst)
+
 Dionysios Spiliopoulos (Dspil)
