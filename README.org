@@ -1,1 +1,9 @@
-* Word blitz facebook game bot
+* Word Blitz
+A Solver for the Facebook messenger Word Blitz game (greek version). 
+It reads the board recognizing the depicted letters (using KNN) and modifiers and then uses the mouse to enter the solution.
+The solution is computed using a DFS search at the intersection of the tree graph extracted from the board and the tree graph composed using a lexicon of the greek language.
+The lexicon was downloaded from the Aspell dictionaries at https://ftp.gnu.org/gnu/aspell/dict/0index.html.
+The bot is now only usable from a 1366x768 screen using Mozilla Firefox.
+** Authors
+Danai Efstathiou (danaiefst)
+Dionysios Spiliopoulos (Dspil)
